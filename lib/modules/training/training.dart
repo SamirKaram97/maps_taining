@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:maps_training/toaste.dart';
 
 
 class TrainingPage extends StatefulWidget {
@@ -10,11 +13,76 @@ class TrainingPage extends StatefulWidget {
 }
 
 class _TrainingPageState extends State<TrainingPage> {
+
+  Position? x;
+
+  Future getLocation()async
+  {
+    LocationPermission per;
+    per=await Geolocator.checkPermission();
+    print('=====================================');
+    print(per);
+    print('=====================================');
+    if(per== LocationPermission.denied)
+      {
+        per=await Geolocator.requestPermission();
+      }
+    print(per);
+
+    if(per== LocationPermission.denied)
+    {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text('please allow access to your location'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  // Some code to undo the change.
+                },
+              ),
+            ));
+    }
+    else
+      {
+        bool isServiceEnabled;
+        isServiceEnabled=await Geolocator.isLocationServiceEnabled();
+        print(isServiceEnabled);
+        if(isServiceEnabled)
+          {
+            x=await getcl();
+          }
+        else
+          {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: const Text('please enable gps'),
+            action: SnackBarAction(
+              label: 'Undo',
+              onPressed: () {
+                // Some code to undo the change.
+              },
+            ),
+          ));
+          }
+      }
+
+
+  }
+  Future<Position> getcl()async
+  {
+    return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Training'),),
-      body: const Center(child: Text('Training'),),
+      body: Center(child: MaterialButton(onPressed:()async{
+        await getLocation();
+        print(x!.longitude);
+        print(x!.latitude);
+
+
+
+      },child: Text('Training')),),
     );
   }
 }
