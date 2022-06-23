@@ -82,6 +82,7 @@ class _TrainingPageState extends State<TrainingPage> {
         print(x!.latitude);
         List<Placemark> placemarks = await placemarkFromCoordinates(x!.longitude, x!.latitude);
         print(placemarks[0]);
+        print(Geolocator.distanceBetween(30, 30, 40, 40));
       },child: Text('Training')),),
     );
   }
