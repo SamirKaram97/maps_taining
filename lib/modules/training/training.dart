@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maps_training/toaste.dart';
+import 'package:geocoding/geocoding.dart';
 
 
 class TrainingPage extends StatefulWidget {
@@ -79,9 +80,8 @@ class _TrainingPageState extends State<TrainingPage> {
         await getLocation();
         print(x!.longitude);
         print(x!.latitude);
-
-
-
+        List<Placemark> placemarks = await placemarkFromCoordinates(x!.longitude, x!.latitude);
+        print(placemarks[0]);
       },child: Text('Training')),),
     );
   }
